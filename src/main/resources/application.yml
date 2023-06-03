@@ -1,0 +1,27 @@
+jwt:
+  secret: tlzmfltzjdkfaAej235skdf9dfskdjkDdhxksltygpdl12qhrhltvek
+
+spring:
+  jpa:
+    properties:
+      jakarta:
+        persistence:
+          sharedCache:
+            mode: ALL
+    hibernate:
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+
+  datasource:
+    url: "jdbc:h2:tcp://localhost/~/capstone_demo2"
+    username: sa
+    password:
+    driver-class-name: "org.h2.Driver"
+    hikari:
+      maximum-pool-size: 20
+
+logging.level: #띄어쓰기 없음
+  org.hibernate.SQL: debug #띄어쓰기 2칸
+  org.hibernate.type: trace #띄어쓰기 2칸
