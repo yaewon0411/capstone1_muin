@@ -20,6 +20,19 @@ public class DelivererRepository {
     public void save(Deliverer deliverer){
         em.persist(deliverer);
     }
+
+    public Deliverer findByDeliverer(Deliverer deliverer){
+        Deliverer findOne = em.createQuery("select d from Deliverer d where id like :id" +
+                        "and company like :company" +
+                        "and name like :name", Deliverer.class)
+                .setParameter("id", deliverer.getId())
+                .setParameter("company", deliverer.getCompany())
+                .setParameter("name", deliverer.getName())
+                .getSingleResult();
+        return findOne;
+    }
+
+
     //모든 배달인 조회
     public List<Deliverer> findAllDeliverer(){
 
@@ -40,7 +53,7 @@ public class DelivererRepository {
             }else{
                 jpql += " and";
             }
-            jpql += " r.name like :name";
+            jpql += " d.name like :name";
         }
         if(StringUtils.hasText(search.getId())){
             if(isFirstCondition){
@@ -49,7 +62,7 @@ public class DelivererRepository {
             }else{
                 jpql += " and";
             }
-            jpql += " r.id like :id";
+            jpql += " d.id like :id";
         }
         if(StringUtils.hasText(search.getCompany())){
             if(isFirstCondition){
@@ -58,7 +71,7 @@ public class DelivererRepository {
             }else{
                 jpql += " and";
             }
-            jpql += "r.company like :company";
+            jpql += "d.company like :company";
         }
 
         TypedQuery<Deliverer> query = em.createQuery(jpql, Deliverer.class); //최대 100건
@@ -76,4 +89,28 @@ public class DelivererRepository {
         return query.getResultList();
     }
 
+    public List<Deliverer> findByUsername(String username) { //deliverer의 id값
+
+        return em.createQuery("select d from Deliverer d where d.id like :id", Deliverer.class)
+                .setParameter("id", username)
+                .getResultList();
+    }
+
+    public List<Deliverer> findByIdAndName(String id, String name) {
+        return em.createQuery("select d from Deliverer d where d.id like :id and d.name like :name",Deliverer.class)
+                .setParameter("id",id)
+                .setParameter("name",name)
+                .getResultList();
+    }
+    public List<Deliverer> findNameByIdAndCompany(String id, String company){
+        return em.createQuery("select d from Deliverer d where d.id like :id and d.company like :company",Deliverer.class)
+                .setParameter("id",id)
+                .setParameter("company",company)
+                .getResultList();
+    }
+    public List<Deliverer> findById(String id){
+        return em.createQuery("select d from Deliverer d where d.id like :id",Deliverer.class)
+                .setParameter("id",id)
+                .getResultList();
+    }
 }

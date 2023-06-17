@@ -38,6 +38,7 @@ public class ParcelHistory {
     })
     private Resident resident;
 
+
     public void setResident(Resident resident){
         this.resident = resident;
 //        resident.getParcelHistories().add(this);
@@ -60,6 +61,7 @@ public class ParcelHistory {
         ParcelHistory parcelHistory = new ParcelHistory();
         parcelHistory.setParcel(parcel);
         parcelHistory.setStatus(status);
+        parcelHistory.setDeliverer(parcel.getDeliverer());
         parcelHistory.setResident(parcel.getResident());
         parcelHistory.setLocalDateTime(LocalDateTime.now());
 

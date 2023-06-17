@@ -2,10 +2,11 @@ package capstone_demo.repository.search;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Data
 public class DelivererSearch {
 
     private String id;

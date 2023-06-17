@@ -9,7 +9,7 @@ import lombok.Data;
 @Builder
 public class TokenInfo {
 
-    private  String grantType; //jwt 인증 타입. bearer 사용. http 헤더에 prefix로 붙일것
+    private  String grantType; //jwt 인증 타입. bearer 사용
     private String accessToken;
     private String refreshToken;
 }

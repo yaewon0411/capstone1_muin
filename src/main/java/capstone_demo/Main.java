@@ -40,6 +40,12 @@ public class Main {
 //
 //            tx.begin();
 //
+//            Image image = new Image();
+//            image.setPath("사진경로1");
+//
+//            ParcelHistory findParcel = em.find(ParcelHistory.class, 1L);
+//            image.setParcelHistory(findParcel);
+//            em.persist(image);
 //
 //
 //            tx.commit();

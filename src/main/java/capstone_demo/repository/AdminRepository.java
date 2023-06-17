@@ -44,6 +44,16 @@ public class AdminRepository {
 
         return password;
     }
+    public List<Admin> findByUsername(String username) { //username : admin의 id값
 
-
+        return em.createQuery("select a from Admin a where a.id like :id",Admin.class)
+                .setParameter("id",username)
+                .getResultList();
+    }
+    public List<Admin> firstLogin(String id, String password) {
+        return em.createQuery("select a from Admin a where a.id like :id and a.password like :password",Admin.class)
+                .setParameter("id",id)
+                .setParameter("password",password)
+                .getResultList();
+    }
 }

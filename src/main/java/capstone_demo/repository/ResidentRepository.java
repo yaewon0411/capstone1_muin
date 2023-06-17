@@ -1,32 +1,30 @@
 package capstone_demo.repository;
 
+import capstone_demo.domain.Id.ResidentId;
 import capstone_demo.domain.Resident;
-import capstone_demo.domain.ResidentId;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
 public class ResidentRepository{
 
     private final EntityManager em;
-
+    //거주인 저장
     public void save(Resident resident){
 
         em.persist(resident);
     }
-    public List<Resident> findAllResident(){
-        return em.createQuery("select r from Resident r",Resident.class)
+    public List<Object[]> findAllResident(){
+        return em.createQuery("select r.address, r.name, r.birth, r from Resident r", Object[].class)
                 .getResultList();
     }
     public Resident findByResident(Resident resident){
@@ -37,31 +35,30 @@ public class ResidentRepository{
                 .setParameter("address", resident.getAddress())
                 .setParameter("birth", resident.getBirth())
                 .getResultList();
-
         if (!findResidents.isEmpty()) {
             return findResidents.get(0);
         } else {
             throw new NoResultException("존재하는 거주인이 없습니다.");
         }
-
-
-//        Resident findResident = null;
-//        try {
-//            findResident = em.createQuery("select r from Resident r where r.name like :name and r.address like :address and r.birth like :birth", Resident.class)
-//                    .setParameter("name", resident.getName())
-//                    .setParameter("address", resident.getAddress())
-//                    .setParameter("birth", resident.getBirth())
-//                    .getSingleResult();
-//
-//            System.out.println("findResident.getName() = " + findResident.getName());
-//            System.out.println("findResident.getAddress() = " + findResident.getAddress());
-//            System.out.println("findResident.getAddress() = " + findResident.getAddress());
-//        }catch (NoResultException e){
-//            e.printStackTrace();
-//        }
-//        System.out.println("(findResident==resident) = " + (findResident==resident));
-//        return findResident;
     }
+    public List<Resident> findByUsername(String username){ //username = birth+address+name
+        List <Resident> findOne = new ArrayList<>();
+
+        if(username.length()<15) return findOne;
+        String birth = username.substring(0,6);
+        String address = username.substring(6,14);
+        String name = username.substring(14);
+
+        findOne = em.createQuery("select r from Resident r where birth like :birth and address like :address" +
+                        " and name like :name", Resident.class)
+                .setParameter("birth", birth)
+                .setParameter("address", address)
+                .setParameter("name",name)
+                .getResultList();
+        return findOne;
+    }
+
+
     public List<Resident> findByName(String name){
         return em.createQuery("select r from Resident r where r.name like :name",Resident.class)
                 .setParameter("name",name)
@@ -69,7 +66,7 @@ public class ResidentRepository{
                 .getResultList();
     }
     public Resident findByBirthAndAddress(String birth, String address){
-        System.out.println("레포 조회 메서드 실행");
+
         List<Resident> resultList = em.createQuery("select r from Resident r where r.birth like :birth and r.address like :address", Resident.class)
                 .setParameter("birth", birth)
                 .setParameter("address", address)
@@ -83,6 +80,13 @@ public class ResidentRepository{
             return resultList.get(0);
         }
     }
+    public List<Resident> findByNameAndAddress(String name, String address){
+        return em.createQuery("select r from Resident r where r.name like:name and r.address like :address", Resident.class)
+                .setParameter("name", name)
+                .setParameter("address", address)
+                .getResultList();
+    }
+
     public List<Resident> findByAddress(String address){
         return em.createQuery("select r from Resident r where r.address like :address",Resident.class)
                 .setParameter("address",address)
@@ -141,14 +145,7 @@ public class ResidentRepository{
             return query.getResultList();
     }
     public void deleteResident(Resident resident){
-
-        em.createQuery("delete from Resident r where r.name like :name and r.address like :address and r.birth like :birth")
-                .setParameter("name", resident.getName())
-                .setParameter("address", resident.getAddress())
-                .setParameter("birth", resident.getBirth());
-        System.out.print("[name = " + resident.getName());
-        System.out.print(", address = " + resident.getAddress());
-        System.out.print(", birth = " + resident.getBirth() + "] 삭제 완료");
+        em.remove(resident);
     }
 
 }

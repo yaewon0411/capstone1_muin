@@ -4,6 +4,7 @@ import capstone_demo.domain.Resident;
 import capstone_demo.dto.TokenInfo;
 //import capstone_demo.jwt.JwtTokenProvider;
 import capstone_demo.service.ResidentService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
