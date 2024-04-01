@@ -1,14 +1,10 @@
-package capstone_demo.Controller;
+package capstone_demo.controller;
 
 import capstone_demo.domain.*;
 import capstone_demo.dto.ParcelInfo;
-import capstone_demo.dto.TokenInfo;
-import capstone_demo.jwt.JwtTokenProvider;
-import capstone_demo.jwt.TokenUtil;
 import capstone_demo.service.ParcelHistoryService;
 import capstone_demo.service.ResidentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,7 +1,9 @@
 package capstone_demo.domain;
 
 import capstone_demo.domain.Id.ResidentId;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import jakarta.persistence.*;
@@ -14,6 +16,7 @@ import java.util.*;
 @Entity
 @Getter @Setter
 @IdClass(ResidentId.class)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Resident implements UserDetails {
     @Id
     @Column(name = "resident_name")
@@ -67,8 +70,5 @@ public class Resident implements UserDetails {
         return true;
     }
 
-//    @ManyToOne
-//    @JoinColumn(name = "admin_id") 이건 나중에 생각하기로
-//    private Admin admin;
 
 }

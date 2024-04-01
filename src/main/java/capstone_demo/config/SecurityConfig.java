@@ -1,6 +1,8 @@
-package capstone_demo.jwt;
+package capstone_demo.config;
 
 
+import capstone_demo.jwt.JwtAuthenticationFilter;
+import capstone_demo.jwt.JwtTokenProvider;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -56,6 +58,7 @@ public class SecurityConfig {
                 .and()
                 .headers().frameOptions().disable()
                 .and()
+                .formLogin(form -> form.disable()) //formLogin 해제
                 .authorizeHttpRequests(request -> request
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll() //어떤 템플릿으로 넘길진 모르겠지만 일단 거쳐야 하니까 설정
                         .requestMatchers("/**","/notifsys/**","/notifsys/login","/managesys/login/resident","/managesys/adminJoin").permitAll()
@@ -65,10 +68,6 @@ public class SecurityConfig {
                         .requestMatchers("/managesys/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()	// 어떠한 요청이라도 인증필요
                 )
-//                .formLogin(login -> login	// form 방식 로그인 사용
-//                        .defaultSuccessUrl("/view/dashboard", true)	// 성공 시 dashboard로
-//                        .permitAll()	// 대시보드 이동이 막히면 안되므로 얘는 허용
-//                )
 //                .logout(withDefaults())	// 로그아웃은 기본설정으로 (/logout으로 인증해제)
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler())
                 .and()

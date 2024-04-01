@@ -1,4 +1,4 @@
-package capstone_demo.Controller;
+package capstone_demo.controller;
 
 import capstone_demo.domain.*;
 import capstone_demo.dto.*;
