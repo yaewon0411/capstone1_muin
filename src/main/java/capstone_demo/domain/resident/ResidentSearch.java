@@ -1,4 +1,4 @@
-package capstone_demo.repository;
+package capstone_demo.domain.resident;
 
 import lombok.Builder;
 import lombok.Getter;

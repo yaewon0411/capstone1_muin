@@ -1,14 +1,13 @@
 package capstone_demo.service;
 
-import capstone_demo.domain.Resident;
-import capstone_demo.dto.ResidentDto;
+import capstone_demo.domain.resident.Resident;
+import capstone_demo.domain.resident.ResidentDto;
 import capstone_demo.dto.TokenInfo;
 //import capstone_demo.jwt.JwtTokenProvider;
 import capstone_demo.jwt.JwtTokenProvider;
 import capstone_demo.repository.ParcelHistoryRepository;
 import capstone_demo.repository.ResidentRepository;
-import capstone_demo.repository.ResidentSearch;
-import io.jsonwebtoken.Jwts;
+import capstone_demo.domain.resident.ResidentSearch;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,25 +41,16 @@ public class ResidentService{
 
     //거주인 등록(회원가입)
     @Transactional
-    public void join(Resident resident){
+    public void join(ResidentDto residentDto){
 
-        validateDuplicateResident(resident); //중복 회원 검증
-        residentRepository.save(resident);
+        validateDuplicateResident(residentDto); //중복 회원 검증
+        residentRepository.save(residentDto.toEntity());
         System.out.println("가입 완료");
     }
     //거주인 중복 검사
-    public void validateDuplicateResident(Resident resident){
-        //exception
-        ResidentSearch search = ResidentSearch.builder()
-                .name(resident.getName())
-                .address(resident.getAddress())
-                .birth(resident.getBirth())
-                .build();
-
-        List<Resident> findResidents = residentRepository.findAllByString(search);
-        if(!findResidents.isEmpty()){
-            throw new IllegalStateException("이미 존재하는 거주인입니다.");
-        }
+    public void validateDuplicateResident(ResidentDto residentDto){
+        if(residentRepository.findByResident(residentDto.getName(), residentDto.getAddress(), residentDto.getBirth()) != null)
+            throw new IllegalStateException("이미 등록된 거주인입니다.");
     }
     //거주인 로그인
     @Transactional
@@ -82,10 +71,9 @@ public class ResidentService{
     }
 
     public void validateResident(Resident resident){
-
-        if(residentRepository.findByResident(resident)==null){
+        if(residentRepository.findByResident(resident.getName(), resident.getAddress(), resident.getBirth())==null)
             throw new NoResultException("존재하는 거주인이 아닙니다.");
-        }
+
     }
 
     //모든 거주인 조회
@@ -109,9 +97,26 @@ public class ResidentService{
         return residentRepository.findByBirthAndAddress(birth, address);
     }
     //거주인 객체로 거주인 조회
-    public Resident findByResident(Resident resident) {
-        return residentRepository.findByResident(resident);
+    public Resident getResident (ResidentDto residentDto) {
+
+        Resident residentPC = residentRepository.findByResident(residentDto.getName(), residentDto.getAddress(), residentDto.getBirth());
+        if(residentPC==null) throw new NoResultException("등록된 거주인이 아닙니다");
+        return residentPC;
+
     }
+    @Transactional
+    public ResidentDto updateResident(ResidentDto beforeDto, ResidentDto afterDto){
+        Resident residentPC = residentRepository.findByResident(beforeDto.getName(), beforeDto.getAddress(), beforeDto.getBirth());
+        if(residentPC==null) throw new NoResultException("등록된 거주인이 아닙니다");
+
+        residentPC.setName(afterDto.getName());
+        residentPC.setAddress(afterDto.getAddress());
+        residentPC.setBirth(afterDto.getBirth());
+
+        return new ResidentDto(residentPC.getName(), residentPC.getAddress(), residentPC.getBirth());
+    }
+
+
     //이름으로 거주인 조회
     public List<Resident> findResidentByName(String name){
         return residentRepository.findByName(name);

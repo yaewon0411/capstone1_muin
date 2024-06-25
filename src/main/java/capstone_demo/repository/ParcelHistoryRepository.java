@@ -1,17 +1,13 @@
 package capstone_demo.repository;
 
 import capstone_demo.domain.*;
-import capstone_demo.dto.ParcelInfo;
-import jakarta.persistence.TypedQuery;
+import capstone_demo.domain.resident.Resident;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.List;
 
 @Repository

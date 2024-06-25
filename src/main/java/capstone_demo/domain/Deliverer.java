@@ -3,6 +3,7 @@ package capstone_demo.domain;
 import capstone_demo.domain.Id.DelivererId;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,6 +17,7 @@ import java.util.List;
 @Entity
 @Getter @Setter
 @IdClass(DelivererId.class)
+@NoArgsConstructor
 public class Deliverer implements UserDetails {
     @Id
     @Column(name = "deliverer_id")

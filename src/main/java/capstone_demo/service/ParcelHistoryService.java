@@ -1,17 +1,15 @@
 package capstone_demo.service;
 
 import capstone_demo.domain.*;
+import capstone_demo.domain.resident.Resident;
 import capstone_demo.dto.AdminViewDto;
 import capstone_demo.dto.ParcelInfo;
 import capstone_demo.repository.ParcelHistoryRepository;
-import capstone_demo.repository.ResidentSearch;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.NoResultException;
-import jakarta.resource.cci.ResultSetInfo;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

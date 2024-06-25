@@ -1,7 +1,6 @@
 package capstone_demo.repository;
 
 import capstone_demo.domain.Deliverer;
-import capstone_demo.domain.Resident;
 import capstone_demo.repository.search.DelivererSearch;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;

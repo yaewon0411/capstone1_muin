@@ -1,10 +1,7 @@
-package capstone_demo.domain;
+package capstone_demo.domain.resident;
 
 import capstone_demo.domain.Id.ResidentId;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,6 +23,12 @@ public class Resident implements UserDetails {
     private String address;
     @Column(name = "resident_birth")
     private String birth;
+    @Builder
+    public Resident(String name, String address, String birth) {
+        this.name = name;
+        this.address = address;
+        this.birth = birth;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

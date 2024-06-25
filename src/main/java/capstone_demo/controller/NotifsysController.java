@@ -1,6 +1,6 @@
 package capstone_demo.controller;
 
-import capstone_demo.domain.*;
+import capstone_demo.domain.resident.Resident;
 import capstone_demo.dto.ParcelInfo;
 import capstone_demo.service.ParcelHistoryService;
 import capstone_demo.service.ResidentService;

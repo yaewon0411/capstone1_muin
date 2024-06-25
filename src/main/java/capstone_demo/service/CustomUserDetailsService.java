@@ -2,7 +2,7 @@ package capstone_demo.service;
 
 import capstone_demo.domain.Admin;
 import capstone_demo.domain.Deliverer;
-import capstone_demo.domain.Resident;
+import capstone_demo.domain.resident.Resident;
 import capstone_demo.repository.AdminRepository;
 import capstone_demo.repository.DelivererRepository;
 import capstone_demo.repository.ResidentRepository;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

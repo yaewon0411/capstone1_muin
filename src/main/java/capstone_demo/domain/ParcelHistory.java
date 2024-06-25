@@ -1,16 +1,18 @@
 package capstone_demo.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import capstone_demo.domain.resident.Resident;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter @Setter
 @Table(name = "ParcelHistory")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ParcelHistory {
 
     @Id @GeneratedValue

@@ -1,7 +1,7 @@
 package capstone_demo.repository;
 
-import capstone_demo.domain.Id.ResidentId;
-import capstone_demo.domain.Resident;
+import capstone_demo.domain.resident.Resident;
+import capstone_demo.domain.resident.ResidentSearch;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
@@ -27,19 +27,15 @@ public class ResidentRepository{
         return em.createQuery("select r.address, r.name, r.birth, r from Resident r", Object[].class)
                 .getResultList();
     }
-    public Resident findByResident(Resident resident){
+    public Resident findByResident(String name, String address, String birth){
 
         String jpql = "select r from Resident r where r.name like :name and r.address like :address and r.birth like :birth";
-        List<Resident> findResidents = em.createQuery(jpql, Resident.class)
-                .setParameter("name", resident.getName())
-                .setParameter("address", resident.getAddress())
-                .setParameter("birth", resident.getBirth())
-                .getResultList();
-        if (!findResidents.isEmpty()) {
-            return findResidents.get(0);
-        } else {
-            throw new NoResultException("존재하는 거주인이 없습니다.");
-        }
+
+        return em.createQuery(jpql, Resident.class)
+                .setParameter("name", name)
+                .setParameter("address", address)
+                .setParameter("birth", birth)
+                .getSingleResult();
     }
     public List<Resident> findByUsername(String username){ //username = birth+address+name
         List <Resident> findOne = new ArrayList<>();

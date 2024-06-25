@@ -1,7 +1,7 @@
 package capstone_demo.repository;
 
 import capstone_demo.domain.Parcel;
-import capstone_demo.domain.Resident;
+import capstone_demo.domain.resident.Resident;
 import capstone_demo.repository.search.ParcelSearch;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;

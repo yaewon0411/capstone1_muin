@@ -54,12 +54,6 @@ public class DelivererService {
         //3. 인증 정보 기반으로 jwt 토큰 생성
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
-//        //claim에 로그인한 유저 이름 정보 추가로 넣음. 작동하는지 확인할것. 기존 발급받은 토큰 클레임에 새 클레임 추가
-//        String accessToken = tokenInfo.getAccessToken();
-//        accessToken = Jwts.builder().claim("name",findDelivererByIdAndName(id,password)).compact();
-//        String plusToken = Jwts.builder().claim("name",findDelivererByIdAndName(id,password)).compact();
-//        tokenInfo.setAccessToken(accessToken+plusToken);
-
         return tokenInfo;
     }
     public String findDelivererNameByIdAndPassword(String id, String password){
@@ -71,7 +65,7 @@ public class DelivererService {
     public Deliverer findDelivererByIdAndName(String id, String name){
         List<Deliverer> findList = delivererRepository.findByIdAndName(id, name);
         if(findList.size()==0) throw new NoResultException("존재하지 않는 배달인 입니다");
-        else if(findList.size()>1) throw new IllegalStateException("배달인의 이름과 사번은 중복될 수 없다고 가정함...");
+        else if(findList.size()>1) throw new IllegalStateException("배달인의 이름과 사번은 중복될 수 없습니다.");
         return findList.get(0);
     }
 
@@ -79,7 +73,7 @@ public class DelivererService {
         return delivererRepository.findAllDeliverer();
     }
 
-    //배달인의 사번이 중복되지 않음을 가정..........
+    //배달인의 사번이 중복되지 X
     public Deliverer findDelivererById(String id){
         List<Deliverer> findList = delivererRepository.findById(id);
         if(findList.size()==0) throw new NoResultException("해당하는 배달인이 존재하지 않습니다.");

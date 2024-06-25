@@ -1,15 +1,10 @@
 package capstone_demo.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import capstone_demo.domain.resident.Resident;
 import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.persistence.*;
-import org.springframework.security.core.parameters.P;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter @Setter

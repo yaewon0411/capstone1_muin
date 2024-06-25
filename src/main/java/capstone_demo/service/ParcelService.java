@@ -1,14 +1,11 @@
 package capstone_demo.service;
 
 import capstone_demo.domain.Parcel;
-import capstone_demo.domain.Resident;
-import capstone_demo.dto.TrackingNumberDto;
+import capstone_demo.domain.resident.Resident;
 import capstone_demo.repository.ParcelRepository;
 import capstone_demo.repository.search.ParcelSearch;
-import jakarta.json.JsonArray;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
-import org.json.simple.JSONArray;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
