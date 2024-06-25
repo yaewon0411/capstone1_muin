@@ -84,7 +84,6 @@ public class ManagesysController {
         parcel.setDeliverer(findDeliverer);
         parcel.setTrackingNumber(dto.getTrackingNumber());
 
-//        Parcel parcel = Parcel.create(dto.getTrackingNumber(), findResident, findDeliverer);
 
         parcelService.parcelRegistration(parcel);
         parcelHistoryService.parcelHistoryRegistration(ParcelHistory.createParcelHistory(parcel));
@@ -104,6 +103,7 @@ public class ManagesysController {
 
         return parcelHistoryService.findAwaitingReturnParcelList(company);
     }
+
     //반송 수거할 택배 송장번호 찍으면 택배 내역 수거 완료로 변경
     @PostMapping("/deliverer/parcel/pickup")
     public String parcelPickUp(@RequestBody TrackingNumberDto dto){

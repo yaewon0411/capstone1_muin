@@ -83,14 +83,6 @@ public class ParcelHistoryService {
         validateParcelHistory(parcel);
         return parcelHistoryRepository.findHistoryByParcel(parcel);
     }
-    public List<ParcelHistory> findHistoryByResident(Resident resident){
-
-        List<ParcelHistory> findHistory = parcelHistoryRepository.findHistoryByResident(resident);
-        if(findHistory.isEmpty()){
-            throw new IllegalStateException("해당 거주인의 택배 내역이 존재하지 않습니다");
-        }
-        return findHistory;
-    }
     public List<ParcelInfo> findCompanyAndTrackingNumberAndStatus(Resident resident){
         String company, trackingNumber, status, dateTime;
         JSONArray ary = new JSONArray();
