@@ -40,7 +40,7 @@ public class JwtTokenProvider {
         System.out.println("authentication.getName() = " + authentication.getName());
         //권한 가져오기
         String authority="";
-        String s = authentication.getAuthorities().stream().toString();
+
         if(authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_[ROLE_USER]")))
             authority = "ROLE_USER";
         if(authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_[ROLE_ADMIN]")))
@@ -49,17 +49,18 @@ public class JwtTokenProvider {
         System.out.println("authority = " + authority);
         long now = (new Date()).getTime();
 
-        Date accessTokenExpiresIn = new Date(now + 86400000);
+
         //accessToken 생성
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim("auth", authority)
-                .setExpiration(accessTokenExpiresIn)
+                .claim("role", authority)
+                .setExpiration(new Date(System.currentTimeMillis() + JwtVo.EXPIRATION_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
         //refreshToken 생성
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + 86400000))
+                .setExpiration(new Date(System.currentTimeMillis() + JwtVo.EXPIRATION_TIME + 86400000))
+                .claim("role", authority)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 

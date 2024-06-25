@@ -1,5 +1,12 @@
 package capstone_demo.jwt;
 
+import capstone_demo.domain.Admin;
+import capstone_demo.domain.Deliverer;
+import capstone_demo.domain.resident.Resident;
+import capstone_demo.dto.AdminLoginRequestDto;
+import capstone_demo.dto.DelivererLoginRequestDto;
+import capstone_demo.dto.ResidentLoginRequestDto;
+import capstone_demo.dto.TokenInfo;
 import capstone_demo.util.ResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -30,13 +37,121 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
+    private Authentication authentication;
     private final static Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
         super(authenticationManager);
-        setFilterProcessesUrl("/login"); ///원래 /login에서 동작하긴 하지만 명시적 표기
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
+    }
+
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+
+        log.debug("디버그 : attemptAuthentication 호출됨");
+        String uri = request.getRequestURI();
+
+        if (uri.equals("/notifsys/login") || uri.equals("/managesys/resident/login")) {
+            return handleResidentLogin(request);
+        } else if (uri.equals("/managesys/deliverer/login")) {
+            return handleDelivererLogin(request);
+        } else if (uri.equals("/managesys/admin/re-login")) {
+            return handleAdminLogin(request);
+        }
+        return null;
+    }
+
+    //거주인 로그인 처리
+    private Authentication handleResidentLogin(HttpServletRequest request) throws AuthenticationException {
+        try{
+            ObjectMapper om = new ObjectMapper();
+            ResidentLoginRequestDto dto = om.readValue(request.getInputStream(), ResidentLoginRequestDto.class);
+
+            //강제 로그인
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    dto.getBirth()+dto.getAddress()+dto.getName(), dto.getName()
+            );
+
+            authentication = authenticationManager.authenticate(authenticationToken);
+            return authentication;
+
+        }catch (IOException e){
+            e.printStackTrace();
+            throw new InternalAuthenticationServiceException(e.getMessage());
+        }
+    }
+
+    //배달인 로그인 처리
+    private Authentication handleDelivererLogin(HttpServletRequest request) throws AuthenticationException {
+        try{
+            ObjectMapper om = new ObjectMapper();
+            DelivererLoginRequestDto dto = om.readValue(request.getInputStream(), DelivererLoginRequestDto.class);
+
+            //강제 로그인
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    dto.getId(), dto.getCompany()
+            );
+
+            Authentication authentication = authenticationManager.authenticate(authenticationToken);
+            return authentication;
+
+        }catch (IOException e){
+            e.printStackTrace();
+            throw new InternalAuthenticationServiceException(e.getMessage());
+        }
+    }
+
+    private Authentication handleAdminLogin(HttpServletRequest request) throws AuthenticationException {
+        try{
+            ObjectMapper om = new ObjectMapper();
+            AdminLoginRequestDto dto = om.readValue(request.getInputStream(), AdminLoginRequestDto.class);
+
+            //강제 로그인
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    dto.getId(), dto.getPassword()
+            );
+
+            Authentication authentication = authenticationManager.authenticate(authenticationToken);
+            return authentication;
+
+        }catch (IOException e){
+            e.printStackTrace();
+            throw new InternalAuthenticationServiceException(e.getMessage());
+        }
+    }
+
+    //return authentication이 잘 작동하면 successfulAuthentication가 호출됨
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+        log.debug("디버그 : successfulAuthentication 호출됨");
+        Object principal = authResult.getPrincipal();
+
+        if(principal instanceof Resident){
+            Resident resident = (Resident) principal;
+            TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+            response.addHeader(JwtVo.HEADER, tokenInfo.getAccessToken());
+
+            ResidentLoginRequestDto loginRequestDto = new ResidentLoginRequestDto(resident);
+            ResponseUtil.success(response, loginRequestDto);
+        }
+        else if(principal instanceof Deliverer){
+            Deliverer deliverer = (Deliverer) principal;
+            TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+            response.addHeader(JwtVo.HEADER, tokenInfo.getAccessToken());
+
+            DelivererLoginRequestDto loginRequestDto = new DelivererLoginRequestDto(deliverer);
+            ResponseUtil.success(response, loginRequestDto);
+        }
+        else if(principal instanceof Admin){
+            Admin admin = (Admin) principal;
+            TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+            response.addHeader(JwtVo.HEADER, tokenInfo.getAccessToken());
+
+            AdminLoginRequestDto loginRequestDto = new AdminLoginRequestDto(admin);
+            ResponseUtil.success(response, loginRequestDto);
+        }
+
     }
 
     // 로그인 실패 시 호출됨

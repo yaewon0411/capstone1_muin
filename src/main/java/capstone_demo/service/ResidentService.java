@@ -50,6 +50,9 @@ public class ResidentService{
         if(residentRepository.findByResident(residentDto.getName(), residentDto.getAddress(), residentDto.getBirth()) != null)
             throw new IllegalStateException("이미 등록된 거주인입니다.");
     }
+
+
+
     //거주인 로그인
     public TokenInfo login(String id, String password){ //id = birth+address+name / pw = name
 
