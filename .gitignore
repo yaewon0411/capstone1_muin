@@ -28,6 +28,6 @@ $RECYCLE.BIN/
 /test
 
 
-/config
-/test
-/resources
+/config/
+/test/
+/resources/
