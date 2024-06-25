@@ -42,10 +42,8 @@ public class ResidentService{
     //거주인 등록(회원가입)
     @Transactional
     public void join(ResidentDto residentDto){
-
         validateDuplicateResident(residentDto); //중복 회원 검증
         residentRepository.save(residentDto.toEntity());
-        System.out.println("가입 완료");
     }
     //거주인 중복 검사
     public void validateDuplicateResident(ResidentDto residentDto){
@@ -53,7 +51,6 @@ public class ResidentService{
             throw new IllegalStateException("이미 등록된 거주인입니다.");
     }
     //거주인 로그인
-    @Transactional
     public TokenInfo login(String id, String password){ //id = birth+address+name / pw = name
 
         //1. 아이디, 비번 기반으로 authentication객체 생성
@@ -93,12 +90,9 @@ public class ResidentService{
         }
         return ary;
     }
-    public Resident findByBirthAndAddress(String birth, String address){
-        return residentRepository.findByBirthAndAddress(birth, address);
-    }
+
     //거주인 객체로 거주인 조회
     public Resident getResident (ResidentDto residentDto) {
-
         Resident residentPC = residentRepository.findByResident(residentDto.getName(), residentDto.getAddress(), residentDto.getBirth());
         if(residentPC==null) throw new NoResultException("등록된 거주인이 아닙니다");
         return residentPC;
@@ -116,19 +110,6 @@ public class ResidentService{
         return new ResidentDto(residentPC.getName(), residentPC.getAddress(), residentPC.getBirth());
     }
 
-
-    //이름으로 거주인 조회
-    public List<Resident> findResidentByName(String name){
-        return residentRepository.findByName(name);
-    }
-    //주소로 거주인 조회
-    public List<Resident> findResidentByAddress(String address){
-        return residentRepository.findByAddress(address);
-    }
-    //생년월일로 거주인 조회
-    public List<Resident> findResidentByBirth(String birth){
-        return residentRepository.findByBirth(birth);
-    }
     //이름과 주소로 거주인 조회
     public Resident findByNameAndAddress(String name, String address){
         List<Resident> findList = residentRepository.findByNameAndAddress(name, address);

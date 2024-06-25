@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,10 +34,15 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManager authenticationManager;
+
+
+
     @Bean
     public AuthenticationManager authenticationManager( //AuthenticationManager는 일반적으로 SecurityConfig에 빈 등록
             AuthenticationConfiguration authenticationConfiguration
     )throws Exception{
+
         return authenticationConfiguration.getAuthenticationManager();
     }
     @Bean
@@ -50,6 +56,7 @@ public class SecurityConfig {
             }
         };
     }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -62,9 +69,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll() //어떤 템플릿으로 넘길진 모르겠지만 일단 거쳐야 하니까 설정
                         .requestMatchers("/**","/notifsys/**","/notifsys/login","/managesys/login/resident","/managesys/adminJoin").permitAll()
-                        .requestMatchers("/managesys/login/deliverer", "managesys/adminJoin").permitAll()
                         .requestMatchers("/h2-console/**","/h2-console").permitAll()
-                        .requestMatchers("/notifsys/home/**", "/managesys/resident/**","managesys/deliverer/**").hasRole("USER")
+                        .requestMatchers("/notifsys/**", "/managesys/resident/**","managesys/deliverer/**").hasRole("USER")
                         .requestMatchers("/managesys/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()	// 어떠한 요청이라도 인증필요
                 )
@@ -73,7 +79,7 @@ public class SecurityConfig {
                 .and()
                 .csrf().ignoringRequestMatchers("/h2-console/**").disable().httpBasic()
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(authenticationManager, jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

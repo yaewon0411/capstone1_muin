@@ -39,18 +39,13 @@ public class AdminService {
         List<Admin> findAdmin = adminRepository.firstLogin(id, password);
         if(findAdmin.size()==0) throw new IllegalStateException("해당 관리인은 존재하지 않습니다.");
     }
-    @Transactional
+
     public TokenInfo login(String id, String password){ //id = id, pw=pw
 
-        //1. 아이디, 비번 기반으로 authentication객체 생성
-        // authentication는 인증 여부를 확인하는 authenticated 값이 false
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(id, password);
-        System.out.println("authenticationToken = " + authenticationToken);
-        //2. 실제 검증
-        //authenticate 메서드가 실행될 때 오버라이딩한 loadUserByUsername 메서드 실행
+
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
-        System.out.println("authentication = " + authentication);
-        //3. 인증 정보 기반으로 jwt 토큰 생성
+
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
         return tokenInfo;
